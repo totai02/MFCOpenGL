@@ -1,17 +1,16 @@
 #include "stdafx.h"
-#include "OpenGLRender.h"
+#include "OpenGLControl.h"
 
-
-COpenGLRender::COpenGLRender(void)
+COpenGLControl::COpenGLControl(void)
 {
-	m_fPosX = 0.0f;    
-	m_fPosY = 0.0f;    
-	m_fZoom = 10.0f;   
-	m_fRotX = 0.0f;    
-	m_fRotY = 0.0f;    
+	m_fPosX = 0.0f;    // X position of model in camera view
+	m_fPosY = 0.0f;    // Y position of model in camera view
+	m_fZoom = 10.0f;   // Zoom on model in camera view
+	m_fRotX = 0.0f;    // Rotation on model in camera view
+	m_fRotY = 0.0f;    // Rotation on model in camera view
 }
 
-void COpenGLRender::oglCreate(CRect rect, CWnd *parent)
+void COpenGLControl::oglCreate(CRect rect, CWnd *parent)
 {
 	CString className = AfxRegisterWndClass(CS_HREDRAW |
 		CS_VREDRAW | CS_OWNDC, NULL,
@@ -26,19 +25,21 @@ void COpenGLRender::oglCreate(CRect rect, CWnd *parent)
 	hWnd = parent;
 }
 
-BEGIN_MESSAGE_MAP(COpenGLRender, CWnd)
+BEGIN_MESSAGE_MAP(COpenGLControl, CWnd)
 	ON_WM_PAINT()
+	ON_WM_CREATE()
 	ON_WM_TIMER()
 	ON_WM_SIZE()
 	ON_WM_MOUSEMOVE()
 END_MESSAGE_MAP()
 
-void COpenGLRender::OnPaint()
+
+void COpenGLControl::OnPaint()
 {
 	ValidateRect(NULL);
 }
 
-void COpenGLRender::oglInitialize(void)
+void COpenGLControl::oglInitialize(void)
 {
 	// Initial Setup:
 	//
@@ -54,14 +55,6 @@ void COpenGLRender::oglInitialize(void)
 		16,    // z-buffer depth
 		0, 0, 0, 0, 0, 0, 0,
 	};
-
-	// Init glew
-	glewExperimental = GL_TRUE;
-	if (GLEW_OK != glewInit())
-	{
-		AfxMessageBox(_T("GLEW could not be initialized!"));
-		return;
-	}
 
 	// Get device context only once.
 	hdc = GetDC()->m_hDC;
@@ -105,7 +98,7 @@ void COpenGLRender::oglInitialize(void)
 }
 
 
-int COpenGLRender::OnCreate(LPCREATESTRUCT lpCreateStruct)
+int COpenGLControl::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
 	if (CWnd::OnCreate(lpCreateStruct) == -1)
 		return -1;
@@ -115,7 +108,7 @@ int COpenGLRender::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	return 0;
 }
 
-void COpenGLRender::OnDraw(CDC *pDC)
+void COpenGLControl::OnDraw(CDC *pDC)
 {
 	// TODO: Camera controls.
 	glLoadIdentity();
@@ -125,58 +118,52 @@ void COpenGLRender::OnDraw(CDC *pDC)
 	glRotatef(m_fRotY, 0.0f, 1.0f, 0.0f);
 }
 
-void COpenGLRender::ImportModel(ObjectModel* model)
+
+void COpenGLControl::oglDrawScene(void)
 {
-	this->model = model;
-	glGenBuffers(1, &vertexbuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-	glBufferData(GL_ARRAY_BUFFER, model->GetVertices().size() * sizeof(glm::vec3), &model->GetVertices()[0], GL_STATIC_DRAW);
+	// Wireframe Mode
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-	glGenBuffers(1, &uvbuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, uvbuffer);
-	glBufferData(GL_ARRAY_BUFFER, model->GetUvs().size() * sizeof(glm::vec2), &model->GetUvs()[0], GL_STATIC_DRAW);
+	glBegin(GL_QUADS);
+	// Top Side
+	glVertex3f( 1.0f, 1.0f,  1.0f);
+	glVertex3f( 1.0f, 1.0f, -1.0f);
+	glVertex3f(-1.0f, 1.0f, -1.0f);
+	glVertex3f(-1.0f, 1.0f,  1.0f);
 
+	// Bottom Side
+	glVertex3f(-1.0f, -1.0f, -1.0f);
+	glVertex3f( 1.0f, -1.0f, -1.0f);
+	glVertex3f( 1.0f, -1.0f,  1.0f);
+	glVertex3f(-1.0f, -1.0f,  1.0f);
 
+	// Front Side
+	glVertex3f( 1.0f,  1.0f, 1.0f);
+	glVertex3f(-1.0f,  1.0f, 1.0f);
+	glVertex3f(-1.0f, -1.0f, 1.0f);
+	glVertex3f( 1.0f, -1.0f, 1.0f);
+
+	// Back Side
+	glVertex3f(-1.0f, -1.0f, -1.0f);
+	glVertex3f(-1.0f,  1.0f, -1.0f);
+	glVertex3f( 1.0f,  1.0f, -1.0f);
+	glVertex3f( 1.0f, -1.0f, -1.0f);
+
+	// Left Side
+	glVertex3f(-1.0f, -1.0f, -1.0f);
+	glVertex3f(-1.0f, -1.0f,  1.0f);
+	glVertex3f(-1.0f,  1.0f,  1.0f);
+	glVertex3f(-1.0f,  1.0f, -1.0f);
+
+	// Right Side
+	glVertex3f( 1.0f,  1.0f,  1.0f);
+	glVertex3f( 1.0f, -1.0f,  1.0f);
+	glVertex3f( 1.0f, -1.0f, -1.0f);
+	glVertex3f( 1.0f,  1.0f, -1.0f);
+	glEnd();
 }
 
-void COpenGLRender::oglDrawScene(void)
-{
-	if (model == NULL) return;
-
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	// 1rst attribute buffer : vertices
-	glEnableVertexAttribArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-	glVertexAttribPointer(
-		0,                  // attribute
-		3,                  // size
-		GL_FLOAT,           // type
-		GL_FALSE,           // normalized?
-		0,                  // stride
-		(void*)0            // array buffer offset
-		);
-
-	// 2nd attribute buffer : UVs
-	glEnableVertexAttribArray(1);
-	glBindBuffer(GL_ARRAY_BUFFER, uvbuffer);
-	glVertexAttribPointer(
-		1,                                // attribute
-		2,                                // size
-		GL_FLOAT,                         // type
-		GL_FALSE,                         // normalized?
-		0,                                // stride
-		(void*)0                          // array buffer offset
-		);
-
-	// Draw the triangle !
-	glDrawArrays(GL_TRIANGLES, 0, model->GetVertices().size() );
-
-	glDisableVertexAttribArray(0);
-	glDisableVertexAttribArray(1);
-}
-
-void COpenGLRender::OnTimer(UINT_PTR nIDEvent)
+void COpenGLControl::OnTimer(UINT_PTR nIDEvent)
 {
 	switch (nIDEvent)
 	{
@@ -202,7 +189,7 @@ void COpenGLRender::OnTimer(UINT_PTR nIDEvent)
 }
 
 
-void COpenGLRender::OnSize(UINT nType, int cx, int cy)
+void COpenGLControl::OnSize(UINT nType, int cx, int cy)
 {
 	CWnd::OnSize(nType, cx, cy);
 
@@ -224,7 +211,7 @@ void COpenGLRender::OnSize(UINT nType, int cx, int cy)
 }
 
 
-void COpenGLRender::OnMouseMove(UINT nFlags, CPoint point)
+void COpenGLControl::OnMouseMove(UINT nFlags, CPoint point)
 {
 	int diffX = (int)(point.x - m_fLastX);
 	int diffY = (int)(point.y - m_fLastY);

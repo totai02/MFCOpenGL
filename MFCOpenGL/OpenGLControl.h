@@ -2,15 +2,16 @@
 #include "afxwin.h"
 #include "ObjectModel.h"
 
-class COpenGLRender : public CWnd
+class COpenGLControl : public CWnd
 {
+
 public:
-	COpenGLRender(void);
+	COpenGLControl(void);
 	UINT_PTR m_unpTimer;
 	void oglCreate(CRect rect, CWnd *parent);
 	void oglInitialize(void);
 	void oglDrawScene(void);
-	void ImportModel(ObjectModel* model);
+
 	bool m_bIsMaximized;
 
 private:
@@ -33,6 +34,8 @@ public:
 	afx_msg void OnSize(UINT nType, int cx, int cy);
 
 	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
+	BOOL GetOldStyleRenderingContext();
+
 
 private:
 	float m_fPosX;    // X position of model in camera view
