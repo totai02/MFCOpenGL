@@ -53,14 +53,15 @@ IMPLEMENT_DYNCREATE(COpenGLView, CView)
 
 	// COpenGLView construction/destruction
 
-	COpenGLView::COpenGLView() : m_hRC(0), m_pDC(0), m_ErrorString(_ErrorStrings[0])
+	COpenGLView::COpenGLView() : m_hRC(0), m_pDC(0), m_ErrorString(_ErrorStrings[0]), m_frame(NULL)
 	{
 		// TODO: add construction code here
-
+		m_frame = new CFrameWnd();
 	}
 
 	COpenGLView::~COpenGLView()
 	{
+
 	}
 
 	BOOL COpenGLView::PreCreateWindow(CREATESTRUCT& cs)
@@ -126,7 +127,13 @@ IMPLEMENT_DYNCREATE(COpenGLView, CView)
 
 
 	// COpenGLView message handlers
-
+	template <typename T>
+	std::string NumberToString ( T Number )
+	{
+		std::ostringstream ss;
+		ss << Number;
+		return ss.str();
+	}
 
 	int COpenGLView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	{
@@ -142,6 +149,11 @@ IMPLEMENT_DYNCREATE(COpenGLView, CView)
 			return -1;
 		}
 
+		CRect rect;
+		this->GetParent()->GetWindowRect(rect);
+		ScreenToClient(rect);
+		m_frame->Create(NULL, _T("OpenGL View"), WS_CHILD, rect, this);
+		m_frame->ShowWindow(SW_SHOW);
 
 		return 0;
 	}
@@ -169,6 +181,8 @@ IMPLEMENT_DYNCREATE(COpenGLView, CView)
 		CView::OnSize(nType, cx, cy);
 
 		// TODO: Add your message handler code here
+
+		m_frame->SetWindowPos(NULL, 0, 0, cx + 10, cy + 55, SWP_NOMOVE);
 	}
 	void COpenGLView::SetError( int e )
 	{
@@ -351,3 +365,4 @@ IMPLEMENT_DYNCREATE(COpenGLView, CView)
 
 		return TRUE;
 	}
+

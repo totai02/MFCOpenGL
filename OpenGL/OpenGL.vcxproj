@@ -54,12 +54,12 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <AdditionalIncludeDirectories>C:\Users\totantai\Documents\Visual Studio 2012\Projects\OpenGL\Lib\glew-1.13.0\include;C:\Users\totantai\Documents\Visual Studio 2012\Projects\OpenGL\Lib\glm-0.9.7.1;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\totai\Documents\Visual Studio 2012\Projects\MFCOpenGL\Lib\glew-1.13.0\include;C:\Users\totai\Documents\Visual Studio 2012\Projects\MFCOpenGL\Lib\glm-0.9.7.1;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Users\totantai\Documents\Visual Studio 2012\Projects\OpenGL\Lib\glew-1.13.0\bin\Debug\Win32\lib\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Users\totai\Documents\Visual Studio 2012\Projects\MFCOpenGL\Lib\glew-1.13.0\bin;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>opengl32.lib;glu32.lib;glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Midl>
@@ -103,34 +103,23 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Angel.h" />
-    <ClInclude Include="CheckError.h" />
     <ClInclude Include="MainFrm.h" />
-    <ClInclude Include="mat.h" />
-    <ClInclude Include="ObjectModel.h" />
     <ClInclude Include="OpenGL.h" />
     <ClInclude Include="OpenGLDoc.h" />
-    <ClInclude Include="OpenGLRender.h" />
     <ClInclude Include="OpenGLView.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
-    <ClInclude Include="uofrGraphics.h" />
-    <ClInclude Include="vec.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="InitShader.cpp" />
     <ClCompile Include="MainFrm.cpp" />
-    <ClCompile Include="ObjectModel.cpp" />
     <ClCompile Include="OpenGL.cpp" />
     <ClCompile Include="OpenGLDoc.cpp" />
-    <ClCompile Include="OpenGLRender.cpp" />
     <ClCompile Include="OpenGLView.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="uofrGraphics.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="OpenGL.rc" />
@@ -148,10 +137,8 @@
     <Image Include="res\writesmall.bmp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="fshader.glsl" />
     <None Include="res\OpenGL.rc2" />
     <None Include="res\ribbon.mfcribbon-ms" />
-    <None Include="vshader.glsl" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />

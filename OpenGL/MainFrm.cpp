@@ -25,7 +25,7 @@
 
 IMPLEMENT_DYNCREATE(CMainFrame, CFrameWndEx)
 
-const int  iMaxUserToolbars = 10;
+	const int  iMaxUserToolbars = 10;
 const UINT uiFirstUserToolBarId = AFX_IDW_CONTROLBAR_FIRST + 40;
 const UINT uiLastUserToolBarId = uiFirstUserToolBarId + iMaxUserToolbars - 1;
 
@@ -81,6 +81,10 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	EnableAutoHidePanes(CBRS_ALIGN_ANY);
 	// set the visual manager and style based on persisted value
 	OnApplicationLook(theApp.m_nAppLook);
+
+	CRect rect;
+	m_wndRibbonBar.GetWindowRect(rect);
+	ScreenToClient(rect);
 
 	return 0;
 }

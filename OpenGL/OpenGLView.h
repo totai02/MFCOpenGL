@@ -13,8 +13,8 @@
 //
 
 #pragma once
-#include "Angel.h"
 
+const UINT IDC_BUTTON1 = 10001;
 
 class COpenGLView : public CView
 {
@@ -58,6 +58,7 @@ private:
 	void SetError( int e );
 	static const char* const _ErrorStrings[];
 	const char* m_ErrorString;
+	CFrameWnd* m_frame;
 
 	// Generated message map functions
 protected:
@@ -69,6 +70,7 @@ public:
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 	afx_msg void OnDestroy();
 	afx_msg void OnSize(UINT nType, int cx, int cy);
+	afx_msg void OnSizing(UINT fwSide, LPRECT pRect);
 };
 
 #ifndef _DEBUG  // debug version in OpenGLView.cpp
